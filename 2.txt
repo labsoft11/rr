@@ -1,0 +1,73 @@
+index.html--
+
+        <form method="post" action="NewServlet">
+        Username :- <input type="Text" name="t1"><br><br>
+        Password:- <input type="password" name="t2"><br><br>
+        Email:- <input type="text" name="t3"><br><br>
+     
+        Select The Country:-<select name="t4">
+            <option value="con"></option>
+            <option value="India">India</option>
+            <option value="U.S.A">U.S.A</option>
+            <option value="Germany">Germany</option>
+            <option value="Argentina">Argentina</option>
+            <option value="England">England</option>
+          
+        </select><br><br>
+        <div class="box1">
+            <button type="submit">Register</button></div>
+        
+        </form>
+
+       NewServlet--
+         
+
+       import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet(urlPatterns = {"/NewServlet"})
+public class NewServlet extends HttpServlet {
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        try (PrintWriter out = response.getWriter()) {
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet NewServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            
+            String u = request.getParameter("e1");
+            String p = request.getParameter("e2");
+            String e = request.getParameter("e3");
+            String c = request.getParameter("e4");
+            
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/TYIT DB","root","root");
+            
+            Statement st = con.createStatement();
+            
+            String sql = "insert into student(username, password,email,country) values('"+u+"','"+p+"','"+e+"','"+c+"')";
+            int a = st.executeUpdate(sql);
+            
+            out.println("<h1>Record Updated<h1>");
+            
+            out.println("</body>");
+            out.println("</html>");
+        } catch (SQLException ex) {
+            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }

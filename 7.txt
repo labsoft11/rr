@@ -1,0 +1,139 @@
+index.jsp--
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <form method="post" action="Register.jsp">
+        <h2>User Registration</h2>
+        <label>Username:</label>
+        <input type="text" name="name"> <br><br>
+
+        <label>Password:</label>
+        <input type="password" name="pass"> <br><br>    
+
+         Gender: 
+        <input type="radio" name="gender" value="Male"> Male 
+        <input type="radio" name="gender" value="Female"> Female 
+        <input type="radio" name="gender" value="Other"> Other <br/><br/>
+
+        <label>Hobbies:</label><br>
+        <input type="checkbox" name="hobby" value="cricket"> Cricket<br>
+        <input type="checkbox" name="hobby" value="travelling">Travelling<br>
+        <input type="checkbox" name="hobby" value="gaming"> Gaming<br>
+        <input type="checkbox" name="hobby" value="gaming"> Swimming<br>
+        <input type="checkbox" name="hobby" value="reading"> Reading<br><br>
+
+        <input type="submit" value="Register">
+    </form>
+    </body>
+</html>
+
+
+Reg.jsp--
+
+
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <%
+            String name=request.getParameter("name");
+            String pass=request.getParameter("pass");
+            String gender=request.getParameter("gender");
+            String hobby=request.getParameter("hobby");
+            
+            Connection con=DriverManager.getConnection("jdbc:derby://localhost:1527/Practice", "root", "root");
+            Statement st=con.createStatement();
+            
+            String sql="Insert into Details  values('" +name+"','" +pass+"','" +gender+"','" +hobby+"')";
+            int res=st.executeUpdate(sql);
+            
+            
+            
+            
+            %>
+            <h1>Registration Successful!</h1>
+            <p> Your record has been updated</p>
+            <a href="login.jsp">Go to Login</a>
+    </body>
+</html>
+
+
+login.jsp--
+
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <form method="post" action="Validate.jsp">
+            Username:<input type="text" name="name"><br><br>
+            Password:<input type="text" name="pass"><br><br>
+            
+            <input type="submit" value="login">
+        </form>
+    </body>
+</html>
+
+Validate.jsp ---
+
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <%
+            String name=request.getParameter("name");
+            String pass=request.getParameter("pass");
+            
+            Connection con=DriverManager.getConnection("jdbc:derby://localhost:1527/Practice", "root", "root");
+            String sql="SELECT *FROM Details WHERE username=? AND password=?";
+            PreparedStatement ps=con.prepareStatement(sql);
+            
+            ps.setString(1, name);
+            ps.setString(2, pass);
+            
+            ResultSet rs=ps.executeQuery();
+            if(rs.next()){
+        %>
+                <h1>Login Successful</h1>
+                <p class="message success">Welcome, <%= name %>!</p>
+        <%
+            } else {
+        %>
+                <h1>Login Failed</h1>
+                <p class="message error">Invalid username or password.</p>
+                <a href="login.jsp">Try Again</a>
+        <%
+            }
+            %>
+    </body>
+</html>

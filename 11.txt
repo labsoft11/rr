@@ -1,0 +1,14 @@
+Index.html:-
+
+        <form action="NewServlet" method="POST">
+           Name: <input type="text" name="name" value="" />
+           Salary: <input type="text" name="salary" value="" />           
+           <input type="submit" value="Click here" />            
+        </form>
+
+NewServlet:-
+            
+            employee obj = new employee();
+            obj.setName(request.getParameter("name"));
+            obj.setSalary(request.getParameter("salary"));
+            employeeFacade.create(obj);

@@ -1,0 +1,106 @@
+html--
+
+
+<form action="NewServlet" method="post" >     
+            <h1> Currency Converter </h1>
+            Enter Amount <input type="text" name="amt"><br><br>
+            Select Conversion Type
+            <input type="radio" name="type" value="RupDol" checked>Rupees to Dollar
+            <input type="radio" name="type" value="DolRup" >Dollar to Rupees<br><br>
+            <input type="reset" ><input type="submit" value="CONVERT" >
+        </form>
+
+
+SessionBean--
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package converter;
+
+import javax.ejb.Stateless;
+
+
+@Stateless
+public class NewSessionBean {
+
+    public Double RupDol(double Rupees) {
+        return Rupees/65.65;
+    }
+    
+
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+    public Double DolRup(double Dollar) {
+        return Dollar*65.65;
+    }
+}
+
+
+NewServlet--
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+import converter.NewSessionBean;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.ejb.EJB;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet(urlPatterns = {"/NewServlet"})
+public class NewServlet extends HttpServlet {
+    @EJB
+    private NewSessionBean newSessionBean;
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet NewServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            
+            double amt = Double.parseDouble(request.getParameter("amt"));
+                String type = request.getParameter("type");
+                if ("RupDol".equals(type)) {
+                    double result = newSessionBean.RupDol(amt);
+                    out.println("<h1>" + amt + " Rupees = " + result + " Dollars</h1>");
+                } else if ("DolRup".equals(type)) {
+                    double result = newSessionBean.DolRup(amt);
+                    out.println("<h1>" + amt + " Dollars = " + result + " Rupees</h1>");
+                } else {
+                    out.println("<h1>Invalid conversion type selected.</h1>");
+                }
+
+            //out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+

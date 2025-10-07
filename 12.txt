@@ -1,0 +1,87 @@
+Hibernate.java--
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package myhbernatedemo;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+
+
+
+
+public class MyHbernateDemo {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        
+        Configuration cfg=new Configuration();
+        cfg.configure("hibernate.cfg.xml");
+        SessionFactory factory=cfg.buildSessionFactory();
+        Session session=factory.openSession();
+        Transaction t=session.beginTransaction();
+        employee el=new employee();
+        el.setId(65);
+        el.setName("hello");
+        
+        session.persist(el);
+        t.commit();
+        session.close();
+        System.out.println("Successfully saved");
+        
+       
+        
+    }
+    
+}
+
+
+Hibernate.hbm.xml--
+
+<hibernate-mapping>
+  <class name="myhbernatedemo.employee" table="EMPLOYEE">
+  <id name="id">
+      <generator class="assigned"></generator>
+  </id>
+  <property name="name"></property>
+  </class>
+</hibernate-mapping>
+
+
+Employye.java--
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package myhbernatedemo;
+
+
+public class employee {
+    private int id;
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+}

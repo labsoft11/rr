@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mat kar lala</title>
+<style>
+  body {
+    background: #f8fafc; /* soft neutral white */
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .glow-btn {
+    width: 70px;
+    height: 70px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(34,197,94,0.2); /* light transparent green */
+    color: #065f46; /* deep green text */
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(34,197,94,0.3);
+    transition: all 0.25s ease;
+  }
+
+  .glow-btn:hover {
+    background: rgba(34,197,94,0.4);
+    box-shadow: 0 0 20px rgba(34,197,94,0.6);
+    transform: translateY(-3px);
+  }
+
+  .glow-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 12px rgba(34,197,94,0.7);
+  }
+
+  #toast {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    display: none;
+    font-size: 14px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+</style>
+</head>
+<body>
+  <div class="button-container">
+    <button class="glow-btn" data-file="1.txt">1(cal)</button>
+    <button class="glow-btn" data-file="2.txt">2(DB)</button>
+    <button class="glow-btn" data-file="3.txt">3(C)</button>
+    <button class="glow-btn" data-file="4.txt">4(S)</button>
+    <button class="glow-btn" data-file="5.txt">5(RD)</button>
+    <button class="glow-btn" data-file="7.txt">7</button>
+    <button class="glow-btn" data-file="8(FE).txt">8(FE)</button>
+    <button class="glow-btn" data-file="8(FT).txt">8(FT)</button>
+    <button class="glow-btn" data-file="8(cal).txt">8(cal)</button>
+    <button class="glow-btn" data-file="9.txt">9(CC)</button>
+    <button class="glow-btn" data-file="10.txt">10(RR)</button>
+    <button class="glow-btn" data-file="11.txt">11</button>
+    <button class="glow-btn" data-file="12.txt">12</button>
+
+
+
+
+  </div>
+
+  <div id="toast">Copied!</div>
+
+  <script>
+    const buttons = document.querySelectorAll('.glow-btn');
+    const toast = document.getElementById('toast');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const file = btn.getAttribute('data-file');
+
+        try {
+          const response = await fetch(file);
+          if (!response.ok) throw new Error('File not found');
+          const text = await response.text();
+
+          // Copy fetched text to clipboard
+          await navigator.clipboard.writeText(text);
+          showToast();
+
+        } catch (err) {
+          console.error('Copy failed:', err);
+          showToast('Error fetching file');
+        }
+      });
+    });
+
+    function showToast(msg = '👍') {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      clearTimeout(window.toastTimeout);
+      window.toastTimeout = setTimeout(() => {
+        toast.style.transition = 'opacity 0.4s';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.style.display = 'none', 400);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

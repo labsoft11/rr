@@ -1,0 +1,93 @@
+html--
+
+<form action="servlet">
+            1st value : <input type="number" name="n1"><br>
+            2nd value : <input type="number" name="n2"><br>
+            operator : <select name="n3">
+                <option value="5" selected>Select</option>
+                <option value="1">+</option>
+                <option value="2">-</option>
+                <option value="3">/</option>
+                <option value="4">*</option>
+            </select>
+            <input type="submit" value="Calculate">
+        </form>
+
+
+
+Sessionbean---
+
+package demo;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class NewSessionBean {
+
+    public int add(int a, int b) {
+        return (a+b);
+    }
+    public int sub(int a, int b) {
+        return (a-b);
+    }
+    public int div(int a, int b) {
+        return (a/b);
+    }
+    public int mul(int a, int b) {
+        return (a*b);
+    }
+}
+
+
+NewServlet--
+
+import demo.NewSessionBean;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.ejb.EJB;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet(urlPatterns = {"/servlet"})
+public class servlet extends HttpServlet {
+    @EJB
+    private NewSessionBean newSessionBean;    
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {            
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet servlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            
+            int a = Integer.parseInt(request.getParameter("n1"));
+            int b = Integer.parseInt(request.getParameter("n2"));
+            int c = Integer.parseInt(request.getParameter("n3"));
+            
+            switch(c){
+                case 1:
+                    out.println("Addition is " + newSessionBean.add(a, b));
+                    break;
+                case 2:
+                    out.println("Addition is " + newSessionBean.sub(a, b));
+                    break;
+                case 3:
+                    out.println("Addition is " + newSessionBean.div(a, b));
+                    break;
+                case 4:
+                    out.println("Addition is " + newSessionBean.mul(a, b));
+                    break;
+                default :
+                    out.println("Wrong operator");
+            }
+            
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }

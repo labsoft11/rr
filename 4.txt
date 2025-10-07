@@ -1,0 +1,77 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ *
+ * @author Chaitanya
+ */
+@WebServlet(urlPatterns = {"/NewServlet"})
+public class NewServlet extends HttpServlet {
+    static int count=0;
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet NewServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            
+            HttpSession session= request.getSession(true);
+            
+            if(session.isNew()){
+                out.println("Welcome ,Newcorner");
+                count=0;
+                
+            }
+            else{
+                out.println("Welcome Back");
+                count++;
+            }
+                        
+            
+            out.println("<TABLE BORDER=1 ALIGN=CENTER>\n");
+            out.println("<TR BGCOLOR=\"#FFAD00\">\n");
+            out.println("<TH> Info Type<TH>Value\n");
+            out.println("<TR>\n");
+            out.println("<TD>ID<TD>" +session.getId()+ "\n");
+            out.println("<TR>\n");
+            out.println("<TD>Creation Time<TD>" + new Date(session.getCreationTime())+ "\n");
+            out.println("<TR>\n");
+            out.println("<TD> Time of Last Access <TD>" + new Date(session.getLastAccessedTime()) + "\n");
+            out.println("<TR>\n");
+            out.println("<TD> Number of Previous Accesses<TD>" + count + "\n");
+            out.println("</table>");
+            
+            if(count>=10)
+            {
+                session.invalidate();
+            }
+
+
+            
+            //out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
